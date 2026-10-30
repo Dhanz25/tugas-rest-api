@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Menu Kopi</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light pt-5">
+    <div class="container">
+        <h2 class="text-center mb-4 fw-bold">Menu Kopi Spesial</h2>
+        <div class="row" id="menu-container">
+            <!-- Data dari API akan dirender sebagai Card di sini -->
+        </div>
+    </div>
+
+    <script>
+        // Mengambil data dari Backend REST API
+        fetch('http://localhost:3000/api/products')
+            .then(response => response.json())
+            .then(result => {
+                const menuContainer = document.getElementById('menu-container');
+                result.data.forEach(item => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-4 mb-4';
+                    
+                    // Format angka ke format Rupiah
+                    const formattedPrice = new Intl.NumberFormat('id-ID').format(item.price);
+                    
+                    col.innerHTML = `
+                        <div class="card shadow-sm h-100 border-0">
+                            <div class="card-body text-center mt-3">
+                                <h5 class="card-title fw-bold text-dark">${item.name}</h5>
+                                <p class="card-text text-secondary fs-5 mt-2">Rp ${formattedPrice}</p>
+                                <button class="btn btn-outline-primary mt-3 w-100">Pilih Menu</button>
+                            </div>
+                        </div>
+                    `;
+                    menuContainer.appendChild(col);
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+</html>
